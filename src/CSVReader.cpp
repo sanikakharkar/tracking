@@ -1,13 +1,18 @@
 
 #include "../include/CSVReader.hpp"
 
-std::vector<lidarScan>& CSVReader::extractData(std::string const& filename) 
+CSVReader::~CSVReader()
+{
+    lidarScans_.clear();
+}
+
+std::vector<LidarScan> const& CSVReader::extractData(std::string const& filename) 
 {
     std::ifstream file(filename);
     std::string line;
     while(std::getline(file, line))
     {
-        lidarScan scan;
+        LidarScan scan;
         // Store timestamp
         auto pos = line.find(" ");
         scan.timestamp = std::stod(line.substr(0, pos));
@@ -27,6 +32,7 @@ std::vector<lidarScan>& CSVReader::extractData(std::string const& filename)
             line = line.substr(pos+1);
         }
 
-        lidarScans.push_back(scan);
+        lidarScans_.push_back(scan);
     }
+    return lidarScans_;
 }

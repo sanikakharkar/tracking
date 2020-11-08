@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include "include/CSVReader.hpp"
+#include "include/Tracker.hpp"
 
 int main(int argc, char** argv)
 {
@@ -37,7 +38,9 @@ int main(int argc, char** argv)
             if (datafile.is_open())
             {
                 CSVReader reader;   
-                auto& data = reader.extractData(filename);
+                auto const& lidarScans = reader.extractData(filename);
+                Tracker tracker;
+                tracker.track(lidarScans);
                 datafile.close();
             }
             else
