@@ -16,21 +16,47 @@ void Grid::populateGrid(LidarScan const& scan)
         {
             auto x = static_cast<int>(r*cos(angle)/cellSize_);
             auto y = static_cast<int>(r*sin(angle)/cellSize_);
-            ++grid_[Point{x,y}];
+            ++grid_[Point<int>{x,y}];
             angle += LIDAR_ANGLE_INCREMENT;
         }
     }
     saveGridToImage();
 }
 
-std::unordered_map<Point, int, PointHash> const& Grid::getGrid()
+void Grid::setObjects(std::set<Object, associateDetections> const& objects)
 {
-    return grid_;
+    centersAndInliers_.clear();
+    for (auto object: objects)
+    {
+        // std::cout << static_cast<int>(object.center.x/ GRID_CELL_SIZE) << ", " << static_cast<int>(object.center.y/ GRID_CELL_SIZE) << std::endl;
+        centersAndInliers_.insert(Point<int>{static_cast<int>(object.center.x/ GRID_CELL_SIZE), 
+                                  static_cast<int>(object.center.y/ GRID_CELL_SIZE)});
+        for (auto inlier: object.inliers)
+        {
+            centersAndInliers_.insert(Point<int>{static_cast<int>(inlier.x/ GRID_CELL_SIZE), 
+                                  static_cast<int>(inlier.y/ GRID_CELL_SIZE)});
+        }
+    }
+    // std::cout << centersAndInliers_.size() << std::endl;
+}
+
+void Grid::setTracks(std::vector<Track> const& tracks)
+{
+    for (auto track: tracks)
+    {
+        tracks_.insert(Point<int>{static_cast<int>(track.currentPosition.x/ GRID_CELL_SIZE), 
+                                  static_cast<int>(track.currentPosition.y/ GRID_CELL_SIZE)});
+        for (auto position: track.history)
+        {
+            tracks_.insert(Point<int>{static_cast<int>(position.x/ GRID_CELL_SIZE), 
+                                  static_cast<int>(position.y/ GRID_CELL_SIZE)});
+        }
+    }
 }
 
 void Grid::saveGridToImage()
 {
-    int width = 1000, height = 800; 
+    int width = 1400, height = 800; 
     FILE* pgmimg; 
     pgmimg = fopen("pgmimg.pgm", "wb"); 
   
@@ -38,19 +64,31 @@ void Grid::saveGridToImage()
     fprintf(pgmimg, "%d %d\n", width, height);  
   
     fprintf(pgmimg, "255\n");   
-    for (int i = 0; i < height; i++) 
+    for (int i = height/2; i > -height/2; --i) 
     { 
-        for (int j = 0; j < width; j++) 
+        for (int j = width/2; j > -width/2; --j) 
         {   
-            auto it = grid_.find(Point{i-10, j-10});
-            if (it != grid_.end())
+            auto it1 = centersAndInliers_.find(Point<int>{j, i});
+            auto it2 = tracks_.find(Point<int>{j, i});
+            if (it1 != centersAndInliers_.end() || it2 != tracks_.end())
             {
                 fprintf(pgmimg, "%d ", 255); 
+                // std::cout << "Object position: ( " << i << ", " << j << " )" << std::endl;
             }
             else
             {
-                fprintf(pgmimg, "%d ", 0); 
+                auto it = grid_.find(Point<int>{j, i});
+                if (it != grid_.end())
+                {
+                    fprintf(pgmimg, "%d ", 75); 
+                }
+                else
+                {
+                    fprintf(pgmimg, "%d ", 0); 
+                }
             }
+            
+            
         } 
         fprintf(pgmimg, "\n"); 
     } 
