@@ -38,4 +38,10 @@ static constexpr size_t STATE_SIZE = 4;
 
 static constexpr size_t OBSERVATION_SIZE = 2;
 
+static constexpr double POSITION_COVARIANCE = 0.001;
+
+static constexpr double VELOCITY_COVARIANCE = 0.0001;
+
+static constexpr double MEASUREMENT_COVARIANCE = 0.0001;
+
 #endif /* CONSTANTS_HPP */

@@ -23,10 +23,6 @@ std::set<Object, associateDetections>& ArcDetector::detect(LidarScan const& scan
 
             if (inliers.size() > MINIMUM_INLIERS)
             {
-                // std::cout << "Center: (" << center.x << ", " << center.y << ") | Count:" << numPoints << std::endl;
-                // std::cout << "Center: (" << static_cast<int>(center.x/GRID_CELL_SIZE) << ", " 
-                // << static_cast<int>(center.y/GRID_CELL_SIZE) << ") | Count:" << inliers.size() << std::endl;
-
                 Object object{scan.timestamp, center, (int)inliers.size(), inliers};
                 auto it = objects_.find(object);
                 
@@ -36,26 +32,16 @@ std::set<Object, associateDetections>& ArcDetector::detect(LidarScan const& scan
                     {
                         objects_.erase(it);
                         objects_.insert(object);
-                        // std::cout << "Center: (" << static_cast<int>(center.x/GRID_CELL_SIZE) << ", " 
-                        // << static_cast<int>(center.y/GRID_CELL_SIZE) << ") | Count:" << inliers.size() << std::endl;
                     }
                 }
                 else
                 {
                     objects_.insert(object);
-                    // std::cout << "Center: (" << static_cast<int>(center.x/GRID_CELL_SIZE) << ", " 
-                    // << static_cast<int>(center.y/GRID_CELL_SIZE) << ") | Count:" << inliers.size() << std::endl;
                 }
             }
             
         }
     }
-    
-    // for (auto object: objects_)
-    // {
-    //     std::cout << "Center: (" << static_cast<int>(object.center.x/GRID_CELL_SIZE) << ", " 
-    //                 << static_cast<int>(object.center.y/GRID_CELL_SIZE) << ") | Count:" << object.numInliers << std::endl;
-    // }
     return objects_;
 }
 
@@ -70,6 +56,7 @@ Point<double> ArcDetector::findArcCenterGivenRadius(Point<double> const& p1, Poi
     Point<double> c1{p3.x + dx, p3.y + dy};
     Point<double> c2{p3.x - dx, p3.y - dy};
 
+    // The center farther away from the LIDAR origin is the correct center
     if (pow(c1.x, 2) + pow(c1.y, 2) > pow(c2.x, 2) + pow(c2.y, 2))
     {
         return c1;

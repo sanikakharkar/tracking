@@ -2,23 +2,16 @@
 
 void Tracker::track(std::vector<LidarScan> const& lidarScans)
 {
-    ArcDetector detector;
-    Grid grid;
-
     for (size_t i = 0; i < lidarScans.size(); ++i)
     {
-        std::cout << i << std::endl;
         for (size_t id = 0; id < tracks_.size(); ++id)
         {
             tracks_[id].history.push_back(tracks_[id].currentPosition);
             filters_[id].predict(lidarScans[i].timestamp);
         }
-        auto objects = detector.detect(lidarScans[i]);
+        auto objects = detector_.detect(lidarScans[i]);
         for (auto object : objects)
         {
-            // std::cout << "Object: (" << static_cast<int>(object.center.x/GRID_CELL_SIZE) << ", " 
-            // << static_cast<int>(object.center.y/GRID_CELL_SIZE) << ") | Count:" << object.numInliers << std::endl;
-
             if (tracks_.empty())
             {
                 addNewTrack(object);
@@ -28,7 +21,9 @@ void Tracker::track(std::vector<LidarScan> const& lidarScans)
                 auto id = associateObjectToTrack(object);
                 if (object.center.distance(tracks_[id].currentPosition) < ASSOCIATION_DISTANCE_TRACKING)
                 {
-                    updateTrack(id, object);
+                    Observation observation{object.center, object.numInliers};
+                    filters_[id].update(observation);
+                    tracks_[id].confidence += object.numInliers;
                 }
                 else
                 {
@@ -36,42 +31,16 @@ void Tracker::track(std::vector<LidarScan> const& lidarScans)
                 }
             }  
         }
+
+        updateTracks();
         
-        for (size_t id = 0; id < tracks_.size(); ++id)
-        {
-            auto state = filters_[id].getCurrentState();
-            tracks_[id].currentPosition = state.position;
-            tracks_[id].currentVelocity = sqrt( pow(state.velocity.x, 2) + pow(state.velocity.y, 2) );
-            if (tracks_[id].currentVelocity > 0.1) 
-            {
-                tracks_[id].isMoving = true;
-            }
-            else
-            {
-                tracks_[id].isMoving = false;
-            }
-            
-            if (id == getMostConfidentTrack())
-            {
-                std::cout << "Track#" << tracks_[id].ID 
-                << ": ( " << static_cast<int>(tracks_[id].currentPosition.x/ GRID_CELL_SIZE) 
-                << ", " << static_cast<int>(tracks_[id].currentPosition.y/ GRID_CELL_SIZE) 
-                << " ) | Velocity: " << tracks_[id].currentVelocity 
-                << " | Confidence: " << tracks_[id].confidence << std::endl;
-                // std::cout  << tracks_[id].currentPosition.x
-                // << ", " << tracks_[id].currentPosition.y
-                // << ", " << tracks_[id].currentVelocity << std::endl;
-            }
-        }
-
-        std::cout << std::endl << std::endl;
-
+        // Save the last scan, objects and tracks to an image
         if (i == lidarScans.size()-1)
         {
-            grid.populateGrid(lidarScans[i]);
-            grid.setObjects(objects);
-            grid.setTracks(tracks_);
-            grid.saveGridToImage();
+            grid_.populateGrid(lidarScans[i]);
+            grid_.setObjects(objects);
+            grid_.setTracks(tracks_);
+            grid_.saveGridToImage();
         }
     }
 }
@@ -101,21 +70,23 @@ size_t Tracker::associateObjectToTrack(Object const& object)
     return trackID;  
 }
 
-void Tracker::updateTrack(size_t id, Object const& object)
+void Tracker::updateTracks()
 {
-    // std::cout << "Associated Track#" << tracks_[id].ID 
-    // << ": ( " << static_cast<int>(tracks_[id].currentPosition.x/ GRID_CELL_SIZE) 
-    // << ", " << static_cast<int>(tracks_[id].currentPosition.y/ GRID_CELL_SIZE) 
-    // << " ) | Confidence: " << tracks_[id].confidence << std::endl;
-
-    Observation observation{object.center, object.numInliers};
-    filters_[id].update(observation);
-    tracks_[id].confidence += object.numInliers;
-
-    // std::cout << "Updated Track#" << tracks_[id].ID
-    // << ": ( " << static_cast<int>(tracks_[id].currentPosition.x/ GRID_CELL_SIZE) 
-    // << ", " << static_cast<int>(tracks_[id].currentPosition.y/ GRID_CELL_SIZE) 
-    // << " ) | Confidence: " << tracks_[id].confidence << std::endl;
+    for (size_t id = 0; id < tracks_.size(); ++id)
+    {
+        auto state = filters_[id].getCurrentState();
+        tracks_[id].currentPosition = state.position;
+        tracks_[id].currentVelocity = sqrt( pow(state.velocity.x, 2) + pow(state.velocity.y, 2) );
+        
+        if (id == getMostConfidentTrack())
+        {
+            std::cout << std::setprecision(17) << "Time: " << state.time
+            <<  std::setprecision(3) << " | Position: ( " << tracks_[id].currentPosition.x 
+            << ", " << tracks_[id].currentPosition.y
+            << " ) | Velocity: " << tracks_[id].currentVelocity 
+            << " | Confidence: " << tracks_[id].confidence << std::endl;
+        }
+    }
 }
 
 size_t Tracker::getMostConfidentTrack()

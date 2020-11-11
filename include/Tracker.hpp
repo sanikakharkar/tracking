@@ -1,6 +1,7 @@
 #ifndef TRACKER_HPP
 #define TRACKER_HPP
 
+#include <iomanip>
 #include <vector>
 #include <map>
 #include "Track.hpp"
@@ -17,6 +18,8 @@ public:
     void track(std::vector<LidarScan> const& lidarScans);
 
 protected:
+    ArcDetector detector_;
+    Grid grid_;
     std::vector<Track> tracks_;
     std::vector<KalmanFilter> filters_;
 
@@ -24,7 +27,7 @@ protected:
 
     size_t associateObjectToTrack(Object const& object);
 
-    void updateTrack(size_t id, Object const& object);
+    void updateTracks();
 
     size_t getMostConfidentTrack();
     

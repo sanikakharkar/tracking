@@ -28,7 +28,6 @@ void Grid::setObjects(std::set<Object, associateDetections> const& objects)
     centersAndInliers_.clear();
     for (auto object: objects)
     {
-        // std::cout << static_cast<int>(object.center.x/ GRID_CELL_SIZE) << ", " << static_cast<int>(object.center.y/ GRID_CELL_SIZE) << std::endl;
         centersAndInliers_.insert(Point<int>{static_cast<int>(object.center.x/ GRID_CELL_SIZE), 
                                   static_cast<int>(object.center.y/ GRID_CELL_SIZE)});
         for (auto inlier: object.inliers)
@@ -37,7 +36,6 @@ void Grid::setObjects(std::set<Object, associateDetections> const& objects)
                                   static_cast<int>(inlier.y/ GRID_CELL_SIZE)});
         }
     }
-    // std::cout << centersAndInliers_.size() << std::endl;
 }
 
 void Grid::setTracks(std::vector<Track> const& tracks)
@@ -73,14 +71,13 @@ void Grid::saveGridToImage()
             if (it1 != centersAndInliers_.end() || it2 != tracks_.end())
             {
                 fprintf(pgmimg, "%d ", 255); 
-                // std::cout << "Object position: ( " << i << ", " << j << " )" << std::endl;
             }
             else
             {
                 auto it = grid_.find(Point<int>{j, i});
                 if (it != grid_.end())
                 {
-                    fprintf(pgmimg, "%d ", 75); 
+                    fprintf(pgmimg, "%d ", 128); 
                 }
                 else
                 {

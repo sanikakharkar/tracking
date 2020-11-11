@@ -21,7 +21,7 @@ int main(int argc, char** argv)
     {
         std::cerr << "Enter data file type followed by name. Supported types: " << std::endl;
         std::cerr << "-c, --csv <filename.csv>: CSV file " << std::endl;
-        std::cerr << "-r, --rosbag <filename.bag>: Rosbag file " << std::endl;
+        std::cerr << "-r, --rosbag <filename.bag>: Rosbag file [NOT IMPLEMENTED]" << std::endl;
         exit(0);
     }
     else 
@@ -45,13 +45,13 @@ int main(int argc, char** argv)
             }
             else
             {
-                std::cerr << "Enter a valid CSV file name" << std::endl;
+                std::cerr << "Enter a valid CSV file name." << std::endl;
                 exit(1);
             }
         }
         else if (option.compare("-r") == 0 || option.compare("--rosbag") == 0)
         {
-            //// TODO: Add reading for .rosbag file
+            std::cerr << "Rosbag option is not implemented. Please use the CSV option instead." << std::endl;
         }
         else
         {

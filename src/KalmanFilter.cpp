@@ -7,14 +7,14 @@ previousCovariance{Eigen::MatrixXd::Identity(STATE_SIZE, STATE_SIZE)},
 currentCovariance{Eigen::MatrixXd::Identity(STATE_SIZE, STATE_SIZE)}
 {
     motionNoise.resize(STATE_SIZE, STATE_SIZE);
-    motionNoise <<  0.001, 0, 0, 0,
-                    0, 0, 0.001, 0,
-                    0, 0, 0.0001, 0,
-                    0, 0, 0, 0.0001;
+    motionNoise <<  POSITION_COVARIANCE, 0, 0, 0,
+                    0, 0, POSITION_COVARIANCE, 0,
+                    0, 0, VELOCITY_COVARIANCE, 0,
+                    0, 0, 0, VELOCITY_COVARIANCE;
 
     measurementNoise.resize(OBSERVATION_SIZE, OBSERVATION_SIZE);
-    measurementNoise << 0.0001, 0,
-                        0, 0.0001;
+    measurementNoise << MEASUREMENT_COVARIANCE, 0,
+                        0, MEASUREMENT_COVARIANCE;
 }
 
 void KalmanFilter::initialize(State state)
