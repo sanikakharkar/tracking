@@ -7,6 +7,7 @@
 #include "LidarScan.hpp"
 #include "Grid.hpp"
 #include "ArcDetector.hpp"
+#include "KalmanFilter.hpp"
 
 class Tracker
 {
@@ -17,12 +18,15 @@ public:
 
 protected:
     std::vector<Track> tracks_;
+    std::vector<KalmanFilter> filters_;
 
     void addNewTrack(Object const& object);
 
-    size_t findClosestTrackToObject(Object const& object);
+    size_t associateObjectToTrack(Object const& object);
 
     void updateTrack(size_t id, Object const& object);
+
+    size_t getMostConfidentTrack();
     
 };
 

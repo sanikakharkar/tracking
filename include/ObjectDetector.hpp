@@ -8,6 +8,7 @@
 #include "LidarScan.hpp"
 #include "Object.hpp"
 
+// Base pure virtual class for object detection from LIDAR scans.
 class ObjectDetector
 {
 public:

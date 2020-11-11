@@ -7,6 +7,7 @@
 
 struct Object
 {
+    double timestamp;
     Point<double> center;
     int numInliers;
     std::vector<Point<double>> inliers;

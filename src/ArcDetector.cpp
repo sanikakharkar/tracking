@@ -27,7 +27,7 @@ std::set<Object, associateDetections>& ArcDetector::detect(LidarScan const& scan
                 // std::cout << "Center: (" << static_cast<int>(center.x/GRID_CELL_SIZE) << ", " 
                 // << static_cast<int>(center.y/GRID_CELL_SIZE) << ") | Count:" << inliers.size() << std::endl;
 
-                Object object{center, (int)inliers.size(), inliers};
+                Object object{scan.timestamp, center, (int)inliers.size(), inliers};
                 auto it = objects_.find(object);
                 
                 if (it != objects_.end())
@@ -96,7 +96,7 @@ std::vector<Point<double>> ArcDetector::getInliersForCircle(size_t const index,
         {
             inliers.push_back(p);
         }
-        else if (fabs(center.distance(p) - radius_) > OBJECT_RADIUS)
+        else if (fabs(center.distance(p) - radius_) > 0.25*OBJECT_RADIUS)
         {
             break;
         }   

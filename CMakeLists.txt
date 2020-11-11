@@ -13,5 +13,5 @@ file(GLOB SOURCES src/*.cpp)
  
 add_executable(toyTrouble toyTrouble.cpp ${SOURCES})
 
-#find_package(GSL REQUIRED)  
-#target_link_libraries(toyTrouble GSL::gsl)
+find_package(Eigen3 3.3 REQUIRED NO_MODULE)  
+target_link_libraries(toyTrouble Eigen3::Eigen)
