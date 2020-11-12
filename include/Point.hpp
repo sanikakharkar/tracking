@@ -4,6 +4,7 @@
 #include <functional>
 #include <math.h>
 
+// A utility for storing <x, y> type data.
 template<typename T>
 struct Point
 {

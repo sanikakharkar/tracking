@@ -4,6 +4,7 @@
 #include <vector>
 #include "constants.hpp"
 
+// A holder for LIDAR scan data
 struct LidarScan
 {
     double timestamp;

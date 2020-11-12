@@ -1,6 +1,6 @@
 #include "../include/Grid.hpp"
 
-Grid::Grid(double const cellSize, double const width, double const height)
+Grid::Grid(double const cellSize, int const width, int const height)
 :cellSize_{cellSize},
 width_{width},
 height_{height}
@@ -54,17 +54,16 @@ void Grid::setTracks(std::vector<Track> const& tracks)
 
 void Grid::saveGridToImage()
 {
-    int width = 1400, height = 800; 
     FILE* pgmimg; 
     pgmimg = fopen("pgmimg.pgm", "wb"); 
   
     fprintf(pgmimg, "P2\n");  
-    fprintf(pgmimg, "%d %d\n", width, height);  
+    fprintf(pgmimg, "%d %d\n", width_, height_);  
   
     fprintf(pgmimg, "255\n");   
-    for (int i = height/2; i > -height/2; --i) 
+    for (int i = height_/2; i > -height_/2; --i) 
     { 
-        for (int j = width/2; j > -width/2; --j) 
+        for (int j = width_/2; j > -width_/2; --j) 
         {   
             auto it1 = centersAndInliers_.find(Point<int>{j, i});
             auto it2 = tracks_.find(Point<int>{j, i});

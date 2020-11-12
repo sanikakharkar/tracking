@@ -1,5 +1,5 @@
 
-tracks_straight = csvread("output_straight.csv");
+tracks_straight = csvread("outputStraight.csv");
 
 figure(1);
 ax1 = subplot(2,1,1);
@@ -15,7 +15,7 @@ title("Velocity of the car over time");
 xlabel("Time (seconds)");
 ylabel("Velocity (meters/second)");
 
-tracks_turning = csvread("output_turning.csv");
+tracks_turning = csvread("outputTurning.csv");
 
 figure(2);
 ax1 = subplot(2,1,1);

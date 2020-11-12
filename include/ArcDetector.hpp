@@ -8,8 +8,8 @@
 // two points in the scan that are a few points away from each other.
 // It then checks for inliers that fit the circle from the points around the two 
 // selected points. 
-// If the number of inliers is greater than a threshold then an arc is detected.
-// It uses a small association distance to not detect the same arc multiple times.
+// If the number of inliers is greater than a threshold then an object is detected.
+// It uses a small association distance to not detect the same object multiple times.
 
 class ArcDetector : public ObjectDetector
 {

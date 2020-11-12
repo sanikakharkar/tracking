@@ -5,6 +5,7 @@
 #include "constants.hpp"
 #include "Point.hpp"
 
+// A holder for detected objects
 struct Object
 {
     double timestamp;

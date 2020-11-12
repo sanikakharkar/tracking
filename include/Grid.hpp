@@ -10,13 +10,16 @@
 #include "Object.hpp"
 #include "Track.hpp"
 
+// A primitive tool for visualizing the data and output
+// Projects LIDAR scans, object detections and tracks to a grid and saves
+// the grid as a PGM image
 class Grid
 {
 public:
     ~Grid() = default;
     Grid(double const cellSize = GRID_CELL_SIZE, 
-         double const width = GRID_WIDTH, 
-         double const height = GRID_HEIGHT);
+         int const width = GRID_WIDTH, 
+         int const height = GRID_HEIGHT);
 
     void populateGrid(LidarScan const& scan);
 
@@ -28,8 +31,8 @@ public:
 
 protected:
     double const cellSize_;
-    double const width_;
-    double const height_;
+    int const width_;
+    int const height_;
 
     std::unordered_map<Point<int>, int, PointHash<int>> grid_;
 

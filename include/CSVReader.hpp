@@ -5,6 +5,7 @@
 #include <iostream>
 #include "DataReader.hpp"
 
+// A file reader that reads LIDAR scan data from a CSV file.
 class CSVReader : public DataReader
 {
 public:

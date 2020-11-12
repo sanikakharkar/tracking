@@ -4,13 +4,13 @@
 #include <vector>
 #include "Point.hpp"
 
+// A holder for tracks.
 struct Track
 {
     size_t ID;
     int confidence;
     Point<double> currentPosition;
     double currentVelocity;
-    bool isMoving;
     std::vector<Point<double>> history;
 };
 

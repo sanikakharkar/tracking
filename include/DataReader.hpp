@@ -5,6 +5,7 @@
 #include <string>
 #include "LidarScan.hpp"
 
+// Interface for reading LIDAR scan data from files.
 class DataReader
 {
 public:

@@ -47,7 +47,7 @@ void Tracker::track(std::vector<LidarScan> const& lidarScans)
 
 void Tracker::addNewTrack(Object const& object)
 {
-    Track track{tracks_.size(), object.numInliers, object.center, 0.0, false, std::vector<Point<double>>{}};
+    Track track{tracks_.size(), object.numInliers, object.center, 0.0, std::vector<Point<double>>{}};
     KalmanFilter filter;
     filter.initialize({object.timestamp, {object.center.x, object.center.y}, {0.0, 0.0}});
     tracks_.push_back(track);

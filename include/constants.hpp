@@ -2,8 +2,6 @@
 #define CONSTANTS_HPP
 
 #include <math.h>
-#include <eigen3/Eigen/Core>
-#include <eigen3/Eigen/Dense>
 
 static constexpr double LIDAR_MIN_ANGLE = -2*M_PI/3;
 
@@ -18,9 +16,9 @@ static constexpr double LIDAR_ANGLE_INCREMENT =
 
 static constexpr double GRID_CELL_SIZE = 0.014;
 
-static constexpr double GRID_WIDTH = 10.0;
+static constexpr int GRID_WIDTH = 1400;
 
-static constexpr double GRID_HEIGHT = 10.0;
+static constexpr int GRID_HEIGHT = 800;
 
 static constexpr double OBJECT_RADIUS = 0.14;
 

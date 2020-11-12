@@ -10,6 +10,15 @@
 #include "ArcDetector.hpp"
 #include "KalmanFilter.hpp"
 
+// The main tracking algorithm is implemented in this class.
+// For each scan, it does the following:
+//      1. Run the filter's prediction step for existing tracks
+//      2. Detect objects from scan
+//      3. Associate objects with tracks
+//      4. Add new tracks for unassociated objects
+//      5. Run the filter's update step for associated tracks
+//      6. Save all tracks
+
 class Tracker
 {
 public:

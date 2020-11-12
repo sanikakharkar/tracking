@@ -8,6 +8,9 @@
 #include "constants.hpp"
 #include "Point.hpp"
 
+// The state to be extimated.
+// Contains the timestamp, the <x, y> coordinates of the object 
+// and the velocity in the <x, y> directions.
 struct State
 {
     double time;
@@ -15,12 +18,17 @@ struct State
     Point<double> velocity;
 };
 
+// The measurement used for updating the filter.
+// Contains the position and confidence of the detection.
 struct Observation
 {
     Point<double> position;
     int confidence;
 };
 
+// A KalmanFilter for estimating the state of the tracked targets.
+// Uses a constant velocity model for prediction.
+// Uses location of the detection weighted by confidence for update.
 class KalmanFilter
 {
 public:
