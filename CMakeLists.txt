@@ -3,7 +3,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 #set(CMAKE_CXX_FLAGS "-Wconversion -Wall -Werror -Wextra -pedantic")
 
-project(toyTrouble)
+project(tracking)
 
 include_directories(include)
 
@@ -11,7 +11,7 @@ include_directories(include)
  
 file(GLOB SOURCES src/*.cpp)
  
-add_executable(toyTrouble toyTrouble.cpp ${SOURCES})
+add_executable(tracking tracking.cpp ${SOURCES})
 
 find_package(Eigen3 3.3 REQUIRED NO_MODULE)  
-target_link_libraries(toyTrouble Eigen3::Eigen)
+target_link_libraries(tracking Eigen3::Eigen)
